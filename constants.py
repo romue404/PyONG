@@ -2,6 +2,9 @@
 all configurable parameters of this game
 """
 
+"""=====NAME====="""
+GAME_NAME = 'PyONG'
+
 """=====FPS====="""
 FPS = 60
 
