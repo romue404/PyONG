@@ -1,14 +1,15 @@
 import pygame, sys
 from pygame.locals import *
 from constants import *
-from game_entities import pitch, bar
+from game_entities import pitch, bar, ball
 
 
 class Game(object):
     def __init__(self):
         self.pitch = pitch.Pitch()
-        self.bar = bar.Bar(0)
-        self.bar_ = bar.Bar(WINDOW_WIDTH-BAR_WIDTH)
+        self.bar_left = bar.Bar(0)
+        self.bar_right = bar.Bar(WINDOW_WIDTH-BAR_WIDTH)
+        self.ball = ball.Ball(WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
 
     def event_queue(self):
         for event in pygame.event.get():
@@ -29,7 +30,8 @@ class Game(object):
             self.event_queue()
             """======DRAW FRAME====="""
             self.pitch.draw(game_surface)
-            self.bar.draw(game_surface)
-            self.bar_.draw(game_surface)
+            self.bar_left.draw(game_surface)
+            self.bar_right.draw(game_surface)
+            self.ball.draw(game_surface)
             pygame.display.update()
             clock.tick(FPS)
