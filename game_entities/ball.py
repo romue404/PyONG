@@ -8,3 +8,8 @@ class Ball(object):
 
     def draw(self, surface):
         pygame.draw.circle(surface, BALL_COLOR, (self.x, self.y), BALL_RADIUS)
+
+    def move(self, x_change, y_change):
+        self.x += x_change
+        self.y += y_change
+        return self

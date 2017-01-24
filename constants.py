@@ -8,6 +8,9 @@ GAME_NAME = 'PyONG'
 """=====FPS====="""
 FPS = 60
 
+"""======SCORE======"""
+SCORE_SIZE = 50
+
 """=====WINDOW====="""
 WINDOW_WIDTH = 1024
 WINDOW_HEIGHT = 800
@@ -15,9 +18,11 @@ WINDOW_HEIGHT = 800
 """=====BAR====="""
 BAR_WIDTH = 0.05 * WINDOW_WIDTH
 BAR_HEIGHT = 0.25 * WINDOW_HEIGHT
+BAR_VELOCITY = 2
 
 """======BALL====="""
 BALL_RADIUS = int(0.015*WINDOW_WIDTH)
+BALL_VELOCITY = 2
 
 """=====COLORS====="""
 BACKGROUND_COLOR = (29,29,29)
