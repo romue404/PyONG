@@ -52,13 +52,13 @@ class Game(object):
             """======UPDATE===="""
             self.ball.update(time_passed)
             """=====RULES====="""
-            if self.ball.y >= WINDOW_HEIGHT or self.ball.y <=0:
-                self.ball.hit_wall((0, 1))
-            if self.ball.x <= 0:
-                self.ball.hit_wall((1, 0))
+            if self.ball.rect.top >= WINDOW_HEIGHT or self.ball.rect.top <=0:
+                self.ball.reflect((0, 1))
+            if self.ball.rect.left <= 0:
+                self.ball.reflect((1, 0))
                 self.score.away_scored()
-            if self.ball.x >= WINDOW_WIDTH:
-                self.ball.hit_wall((1, 0))
+            if self.ball.rect.right >= WINDOW_WIDTH:
+                self.ball.reflect((1, 0))
                 self.score.home_scored()
             if self.ball.y >= self.bar_left.rect.top and \
                 self.ball.y <= self.bar_left.rect.bottom:
