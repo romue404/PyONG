@@ -10,6 +10,8 @@ class Game(object):
         self.score = score.Score(0,0)
         self.bar_left = bar.Bar(0)
         self.bar_right = bar.Bar(WINDOW_WIDTH-BAR_WIDTH)
+        self.bars = pygame.sprite.Group()
+        self.bars.add(self.bar_left, self.bar_right)
         self.ball = ball.Ball(WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
 
     def draw(self, time_passed):
@@ -38,6 +40,12 @@ class Game(object):
         if pressed[pygame.K_s]:
             self.bar_right.move_down(time_passed)
 
+    def ball_paddle_collision(self):
+        if pygame.sprite.collide_rect(self.bar_left, self.ball):
+            self.ball.reflect((1, 0), left=self.bar_left.rect.right)
+        if pygame.sprite.collide_rect(self.bar_right, self.ball):
+            self.ball.reflect((1, 0), right=self.bar_right.rect.left)
+
     def run(self):
         pygame.init()
         running = True
@@ -52,17 +60,17 @@ class Game(object):
             """======UPDATE===="""
             self.ball.update(time_passed)
             """=====RULES====="""
-            if self.ball.rect.top >= WINDOW_HEIGHT or self.ball.rect.top <=0:
-                self.ball.reflect((0, 1))
+            self.ball_paddle_collision()
+            if self.ball.rect.top >= WINDOW_HEIGHT:
+                self.ball.reflect((0, 1), bottom=WINDOW_HEIGHT)
+            if self.ball.rect.top <= 0:
+                self.ball.reflect((0, 1), top=0)
             if self.ball.rect.left <= 0:
-                self.ball.reflect((1, 0))
+                self.ball.reflect((1, 0), left=0)
                 self.score.away_scored()
             if self.ball.rect.right >= WINDOW_WIDTH:
-                self.ball.reflect((1, 0))
+                self.ball.reflect((1, 0), right=WINDOW_WIDTH)
                 self.score.home_scored()
-            if self.ball.y >= self.bar_left.rect.top and \
-                self.ball.y <= self.bar_left.rect.bottom:
-                print 'in y'
             """======DRAW FRAME====="""
             self.draw(time_passed)
             pygame.display.update()
