@@ -6,7 +6,7 @@ all configurable parameters of this game
 GAME_NAME = 'PyONG'
 
 """=====FPS====="""
-FPS = 60
+FPS = 100
 
 """======SCORE======"""
 SCORE_SIZE = 50

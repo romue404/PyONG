@@ -78,7 +78,7 @@ class Game(object):
         pygame.display.set_caption(GAME_NAME)
         """======GAME LOOP====="""
         while running:
-            time_passed = clock.tick(60) / 1000.0
+            time_passed = clock.tick(FPS) / 1000.0
             """======INPUTS====="""
             self.event_queue(time_passed)
             """======UPDATE===="""
