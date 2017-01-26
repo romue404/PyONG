@@ -54,8 +54,15 @@ class Game(object):
             """=====RULES====="""
             if self.ball.y >= WINDOW_HEIGHT or self.ball.y <=0:
                 self.ball.hit_wall((0, 1))
-            if self.ball.x <= 0 or self.ball.x >= WINDOW_WIDTH :
+            if self.ball.x <= 0:
                 self.ball.hit_wall((1, 0))
+                self.score.away_scored()
+            if self.ball.x >= WINDOW_WIDTH:
+                self.ball.hit_wall((1, 0))
+                self.score.home_scored()
+            if self.ball.y >= self.bar_left.rect.top and \
+                self.ball.y <= self.bar_left.rect.bottom:
+                print 'in y'
             """======DRAW FRAME====="""
             self.draw(time_passed)
             pygame.display.update()

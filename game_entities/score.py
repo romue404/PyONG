@@ -16,3 +16,9 @@ class Score(object):
         resultRect = resultSurf.get_rect()
         resultRect.center = (WINDOW_WIDTH/2, 30)
         surface.blit(resultSurf, resultRect)
+
+    def home_scored(self):
+        self.home += 1
+
+    def away_scored(self):
+        self.away += 1
