@@ -1,5 +1,5 @@
 import pygame
-from constants import BAR_COLOR, BAR_WIDTH, BAR_HEIGHT, WINDOW_HEIGHT
+from constants import BAR_COLOR, BAR_WIDTH, BAR_HEIGHT, WINDOW_HEIGHT, BAR_VELOCITY
 
 
 class Bar(pygame.sprite.Sprite):
@@ -18,10 +18,10 @@ class Bar(pygame.sprite.Sprite):
             self.rect.top = 0
         surface.blit(self.image, self.rect)
 
-    def move_up(self, y_change):
-        self.rect.top -= y_change
+    def move_up(self, time_passed):
+        self.rect.top -= time_passed * BAR_VELOCITY
         return self
 
-    def move_down(self, y_change):
-        self.rect.top += y_change
+    def move_down(self, time_passed):
+        self.rect.bottom += time_passed * BAR_VELOCITY
         return self
