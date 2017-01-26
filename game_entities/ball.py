@@ -10,14 +10,13 @@ class Ball(pygame.sprite.Sprite):
         self.image.fill((255, 255, 255))
         self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
-        self.x = x
-        self.y = y
+        self.rect.center = (x,y)
         self.speed_x = BALL_VELOCITY_MAX
         self.speed_y = BALL_VELOCITY_MAX
 
     def normalize_pos(self):
-        magnitude = self.x**2 + self.y**2
-        return self.x/magnitude, self.y/magnitude
+        magnitude = self.rect.left**2 + self.rect.top**2
+        return self.rect.left/magnitude, self.rect.top/magnitude
 
     def reflect(self, normal, **kwargs):
         #x_, y_ = self.normalize_pos()

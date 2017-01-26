@@ -1,4 +1,5 @@
 import pygame, sys
+import pygame.mixer
 from pygame.locals import *
 from constants import *
 from game_entities import pitch, bar, ball, score
@@ -7,12 +8,19 @@ from game_entities import pitch, bar, ball, score
 class Game(object):
     def __init__(self):
         self.pitch = pitch.Pitch()
-        self.score = score.Score(0,0)
+        self.score = score.Score(0, 0)
         self.bar_left = bar.Bar(0)
         self.bar_right = bar.Bar(WINDOW_WIDTH-BAR_WIDTH)
-        self.bars = pygame.sprite.Group()
-        self.bars.add(self.bar_left, self.bar_right)
-        self.ball = ball.Ball(WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
+        self.ball = ball.Ball(10, WINDOW_HEIGHT/2)
+        self.mixer = pygame.mixer.init()
+
+    def beep_sound(self):
+        pygame.mixer.music.load('sounds/beep.ogg')
+        pygame.mixer.music.play(0)
+
+    def crash_sound(self):
+        pygame.mixer.music.load('sounds/squish.wav')
+        pygame.mixer.music.play(0)
 
     def draw(self, time_passed):
         """
@@ -43,8 +51,24 @@ class Game(object):
     def ball_paddle_collision(self):
         if pygame.sprite.collide_rect(self.bar_left, self.ball):
             self.ball.reflect((1, 0), left=self.bar_left.rect.right)
+            self.beep_sound()
         if pygame.sprite.collide_rect(self.bar_right, self.ball):
             self.ball.reflect((1, 0), right=self.bar_right.rect.left)
+            self.beep_sound()
+
+    def boundary_collision(self):
+        if self.ball.rect.top >= WINDOW_HEIGHT:
+            self.ball.reflect((0, 1), bottom=WINDOW_HEIGHT)
+        if self.ball.rect.top <= 0:
+            self.ball.reflect((0, 1), top=0)
+        if self.ball.rect.left <= 0:
+            self.ball.reflect((1, 0), left=0)
+            self.crash_sound()
+            self.score.away_scored()
+        if self.ball.rect.right >= WINDOW_WIDTH:
+            self.crash_sound()
+            self.ball.reflect((1, 0), right=WINDOW_WIDTH)
+            self.score.home_scored()
 
     def run(self):
         pygame.init()
@@ -61,16 +85,7 @@ class Game(object):
             self.ball.update(time_passed)
             """=====RULES====="""
             self.ball_paddle_collision()
-            if self.ball.rect.top >= WINDOW_HEIGHT:
-                self.ball.reflect((0, 1), bottom=WINDOW_HEIGHT)
-            if self.ball.rect.top <= 0:
-                self.ball.reflect((0, 1), top=0)
-            if self.ball.rect.left <= 0:
-                self.ball.reflect((1, 0), left=0)
-                self.score.away_scored()
-            if self.ball.rect.right >= WINDOW_WIDTH:
-                self.ball.reflect((1, 0), right=WINDOW_WIDTH)
-                self.score.home_scored()
+            self.boundary_collision()
             """======DRAW FRAME====="""
             self.draw(time_passed)
             pygame.display.update()
