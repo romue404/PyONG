@@ -3,15 +3,15 @@ import pygame.mixer
 from pygame.locals import *
 from constants import *
 from game_entities import pitch, bar, ball, score, welcome
-
+import time
 
 class Game(object):
     def __init__(self):
         self.pitch = pitch.Pitch()
-        self.score = score.Score(0, 0)
-        self.bar_left = bar.Bar(0)
-        self.bar_right = bar.Bar(WINDOW_WIDTH-BAR_WIDTH)
-        self.ball = ball.Ball(10, WINDOW_HEIGHT/2)
+        self.score = score.Score()
+        self.bar_left   = bar.paddle_left
+        self.bar_right  = bar.paddle_right
+        self.ball = ball.Ball()
         self.mixer = pygame.mixer.init()
 
     def beep_sound(self):
@@ -57,23 +57,26 @@ class Game(object):
             self.beep_sound()
 
     def boundary_collision(self):
-        if self.ball.rect.top >= WINDOW_HEIGHT:
-            self.ball.reflect((0, 1), bottom=WINDOW_HEIGHT)
-        if self.ball.rect.top <= 0:
-            self.ball.reflect((0, 1), top=0)
-        if self.ball.rect.left <= 0:
-            self.ball.reflect((1, 0), left=0)
+        boundary_collision = False
+        if self.ball.rect.top >= PITCH_HEIGHT:
+            self.ball.reflect((0, 1), bottom=PITCH_HEIGHT)
+        if self.ball.rect.top <= PITCH_TOP:
+            self.ball.reflect((0, 1), top=PITCH_TOP)
+        if self.ball.rect.left <= PITCH_LEFT:
+            boundary_collision = True
+            self.ball.reflect((1, 0), left=PITCH_LEFT)
             self.crash_sound()
             self.score.away_scored()
-        if self.ball.rect.right >= WINDOW_WIDTH:
+        if self.ball.rect.right >= PITCH_WIDTH:
+            boundary_collision = True
             self.crash_sound()
-            self.ball.reflect((1, 0), right=WINDOW_WIDTH)
+            self.ball.reflect((1, 0), right=PITCH_WIDTH)
             self.score.home_scored()
+        return boundary_collision
 
     def run(self):
         pygame.init()
         running = False
-        clock = pygame.time.Clock()
         self.game_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption(GAME_NAME)
         """======WELCOME SCREEN====="""
@@ -86,15 +89,19 @@ class Game(object):
                 elif pygame.key.get_pressed()[pygame.K_SPACE]:
                     running = True
         """======GAME LOOP====="""
+        clock = pygame.time.Clock()
         while running:
-            time_passed = clock.tick(FPS) / 1000.0
-            """======INPUTS====="""
-            self.event_queue(time_passed)
-            """======UPDATE===="""
-            self.ball.update(time_passed)
-            """=====RULES====="""
-            self.ball_paddle_collision()
-            self.boundary_collision()
-            """======DRAW FRAME====="""
-            self.draw(time_passed)
-            pygame.display.update()
+            boundary_collision = False
+            self.ball.reset()
+            while not boundary_collision:
+                time_passed = clock.tick(FPS) / 1000.0
+                """======INPUTS====="""
+                self.event_queue(time_passed)
+                """======UPDATE===="""
+                self.ball.update(time_passed)
+                """=====RULES====="""
+                self.ball_paddle_collision()
+                boundary_collision = self.boundary_collision()
+                """======DRAW FRAME====="""
+                self.draw(time_passed)
+                pygame.display.update()
