@@ -1,4 +1,4 @@
-# PyONG
+# 🐍🏓 PyONG
 Pong in python using Pygame.
 ![Screenshot PyONG](pyong.png)
 

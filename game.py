@@ -2,7 +2,7 @@ import pygame, sys
 import pygame.mixer
 from pygame.locals import *
 from constants import *
-from game_entities import pitch, bar, ball, score
+from game_entities import pitch, bar, ball, score, welcome
 
 
 class Game(object):
@@ -72,10 +72,19 @@ class Game(object):
 
     def run(self):
         pygame.init()
-        running = True
+        running = False
         clock = pygame.time.Clock()
         self.game_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption(GAME_NAME)
+        """======WELCOME SCREEN====="""
+        welcome.Welcome().draw(self.game_surface) 
+        while not running:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif pygame.key.get_pressed()[pygame.K_SPACE]:
+                    running = True
         """======GAME LOOP====="""
         while running:
             time_passed = clock.tick(FPS) / 1000.0

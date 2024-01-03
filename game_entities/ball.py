@@ -22,7 +22,7 @@ class Ball(pygame.sprite.Sprite):
         #x_, y_ = self.normalize_pos()
         #angle = acos(x_) * (180/pi)
         # print angle
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             if hasattr(self.rect, k):
                 setattr(self.rect, k, v)
             else:
